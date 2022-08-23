@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import Login from "./components/Login/Login";
 import Home from "./components/Home/Home";
 import MainHeader from "./components/MainHeader/MainHeader";
+import AuthContext from "./components/store/auth-context";
+//dodaje AuthContext
+
 //aplikacja z logowaniem sie bez wylogowywania, useReducer, useEffect
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -28,13 +31,20 @@ function App() {
   };
 
   return (
-    <React.Fragment>
-      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+    //wywalam React.Fragment bo mam inny wraper
+    //<React.Fragment>
+    //takie ustawienie AuthContext.Provider pozwala wszystkim dzieciom tego komponentu mieć
+    //dostęp do danych z AuthContext
+    <AuthContext.Provider value={{ isLoggedIn: isLoggedIn }}>
+      <MainHeader //{/*isAuthenticated={isLoggedIn}*/}
+        onLogout={logoutHandler}
+      />
       <main>
         {!isLoggedIn && <Login onLogin={loginHandler} />}
         {isLoggedIn && <Home onLogout={logoutHandler} />}
       </main>
-    </React.Fragment>
+    </AuthContext.Provider>
+    //</React.Fragment>
   );
 }
 
