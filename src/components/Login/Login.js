@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  useContext,
+  useRef,
+} from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 import AuthContext from "../store/auth-context";
+import Input from "../UI/Input/Input";
 
 //podajemy aktualny stan
 const emailReducer = (state, action) => {
@@ -51,6 +58,9 @@ const Login = (props) => {
     value: "",
     isValid: null,
   });
+
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
 
   useEffect(() => {
     console.log("EFFECT RUNNING");
@@ -120,47 +130,46 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    authCtx.onLogin(emailState.value, passwordState.value);
     //zamiast enteredEmail daje nasz nowy emailState.value
     //props.onLogin(enteredEmail, enteredPassword);
+    if (formIsValid) {
+      authCtx.onLogin(emailState.value, passwordState.value);
+    } else if (!emailIsValid) {
+      emailInputRef.current.activate();
+    } else {
+      passwordInputRef.current.focus();
+    }
   };
   const authCtx = useContext(AuthContext);
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ""
-            //zamiast emailIsValid daje emailState.isValid
-            //emailIsValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="email">E-Mail</label>
-          <input
-            type="email"
-            id="email"
-            value={emailState.value}
-            //zamiast enteredEmail podmieniam na emailState.value
-            //value={enteredEmail}
-            onChange={emailChangeHandler}
-            onBlur={validateEmailHandler}
-          />
-        </div>
+        <Input
+          ref={emailInputRef}
+          id="email"
+          label="E-Mail"
+          type="email"
+          isValid={emailIsValid}
+          value={emailState.value}
+          onChange={emailChangeHandler}
+          onBlur={validateEmailHandler}
+        ></Input>
         <div
           className={`${classes.control} ${
             passwordState.isValid === false ? classes.invalid : ""
           }`}
         >
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
+          <Input
+            ref={passwordInputRef}
             id="password"
+            label="Password"
+            type="password"
+            isValid={passwordIsValid}
             value={passwordState.value}
-            //zmienilam enteredPassword na passwordState
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
-          />
+          ></Input>
         </div>
         <div className={classes.actions}>
           <Button type="submit" className={classes.btn} disabled={!formIsValid}>
