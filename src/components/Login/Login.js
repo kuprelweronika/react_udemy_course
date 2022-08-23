@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../store/auth-context";
 
 //podajemy aktualny stan
 const emailReducer = (state, action) => {
@@ -119,10 +120,11 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin(emailState.value, passwordState.value);
     //zamiast enteredEmail daje nasz nowy emailState.value
     //props.onLogin(enteredEmail, enteredPassword);
   };
+  const authCtx = useContext(AuthContext);
 
   return (
     <Card className={classes.login}>
