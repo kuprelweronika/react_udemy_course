@@ -59,6 +59,7 @@ const Login = (props) => {
     };
   }, []);
 
+  //destrukturyzacja obiektu zeby dostać konkretna properties
   const { isValid: emailIsValid } = emailState;
   const { isValid: passwordIsValid } = passwordState;
 
