@@ -7,7 +7,8 @@ const SimpleInput = (props) => {
   const nameInputRef = useRef("");
   const [enteredName, setEnteredName] = useState("");
   //state dla walidacji
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(true);
+  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
@@ -16,6 +17,7 @@ const SimpleInput = (props) => {
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
+    setEnteredNameTouched(true);
     //musimy dac zeby nie wysylalo HTTP requesta
 
     //robimy if zeby user nie mogl wrzucic empty form
@@ -29,9 +31,11 @@ const SimpleInput = (props) => {
     const enteredValue = nameInputRef.current.value;
     console.log(enteredValue);
   };
-  const nameInputClasses = enteredNameIsValid
-    ? "form-control"
-    : "form-control invalid";
+
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+  const nameInputClasses = nameInputIsInvalid
+    ? "form-control invalid"
+    : "form-control";
   //wyzej jest warunek do zmiany klasy wzgledem tego czy input jest valid czy nie
 
   return (
@@ -45,7 +49,7 @@ const SimpleInput = (props) => {
           onChange={nameInputChangeHandler}
           value={enteredName}
         />
-        {!enteredNameIsValid && (
+        {nameInputIsInvalid && (
           <p className="error-text">Name must not be empty.</p>
         )}
       </div>
