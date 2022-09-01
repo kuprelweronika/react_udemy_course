@@ -1,19 +1,25 @@
 import { useState } from "react";
+import useInput from "../hooks/use-input";
 
 //mozna tez ustawic ref na inpucie i czytac wartosc tego refa
 //kiedy potrzebujemy
 
 const SimpleInput = (props) => {
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput,
+  } = useInput((value) => value.trim() !== "");
   //const nameInputRef = useRef("");
-  const [enteredName, setEnteredName] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
   //state dla walidacji
   //const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
   const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
 
-  const enteredNameIsValid = enteredName.trim() !== "";
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+  //const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const enteredEmailIsValid =
     enteredEmail.trim() !== "" && enteredEmail.includes("@");
@@ -25,18 +31,18 @@ const SimpleInput = (props) => {
     /*&& enteredAgeIsValid)*/ formIsValid = true;
   }
 
-  const nameInputChangeHandler = (event) => {
-    setEnteredName(event.target.value);
-    //event dla kazdej wpisanej litery
-  };
+  //const nameChangeHandler = (event) => {
+  // setEnteredName(event.target.value);
+  //event dla kazdej wpisanej litery
+  //};
 
   const emailInputChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
   };
 
-  const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true);
-  };
+  // const nameBlurHandler = (event) => {
+  //   setEnteredNameTouched(true);
+  // };
 
   const emailInputBlurHandler = (event) => {
     setEnteredEmailTouched(true);
@@ -44,8 +50,6 @@ const SimpleInput = (props) => {
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    setEnteredNameTouched(true);
-    setEnteredEmailTouched(true);
     //musimy dac zeby nie wysylalo HTTP requesta
 
     //robimy if zeby user nie mogl wrzucic empty form
@@ -57,14 +61,15 @@ const SimpleInput = (props) => {
     //to samo ale z uzyciem Ref, to nie jest zbyt dobre
     //const enteredValue = nameInputRef.current.value;
     //console.log(enteredValue);
-
+    resetNameInput();
     //resetowanie zawartosci
-    setEnteredName("");
+    //setEnteredName("");
     setEnteredEmail("");
-    setEnteredNameTouched(false);
+    //setEnteredNameTouched(false);
     setEnteredEmailTouched(false);
   };
-  const nameInputClasses = nameInputIsInvalid
+
+  const nameInputClasses = nameInputHasError
     ? "form-control invalid"
     : "form-control";
 
@@ -81,11 +86,11 @@ const SimpleInput = (props) => {
           // ref={nameInputRef}
           type="text"
           id="name"
-          onChange={nameInputChangeHandler}
-          onBlur={nameInputBlurHandler}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
           value={enteredName}
         />
-        {nameInputIsInvalid && (
+        {nameInputHasError && (
           <p className="error-text">Name must not be empty.</p>
         )}
       </div>
