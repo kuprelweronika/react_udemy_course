@@ -4,10 +4,10 @@ import { Component } from "react";
 import { counterActions } from "../store";
 
 const Counter = () => {
-  const counter = useSelector((state) => state.counter);
+  const counter = useSelector((state) => state.counter.counter);
   //tutaj będą zawsze przechowywane najbardziej aktualne stany
 
-  const show = useSelector((state) => state.showCounter);
+  const show = useSelector((state) => state.counter.showCounter);
 
   const dispatch = useDispatch();
 
