@@ -4,7 +4,7 @@ import { cartActions } from "./cart-slice";
 export const fetchCartData=()=>{
     return async (dispatch) => {
         const fetchData= async () => {
-            const response = await fetch("https://meals-30d67-default-rtdb.europe-west1.firebasedatabase.app/cart.json")
+        const response = await fetch("https://meals-30d67-default-rtdb.europe-west1.firebasedatabase.app/cart.json")
 ;
 if (!response.ok){
     throw new Error('Could not fetch cart data');
