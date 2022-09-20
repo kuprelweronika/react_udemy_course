@@ -12,7 +12,8 @@ if (!response.ok){
 return data;        }
  
     try {const cartData= await fetchData();
-    dispatch(cartActions.replaceCart(cartData))} catch (error){       dispatch(
+    dispatch(cartActions.replaceCart({items: cartData.items || [],
+        totalQuantitiy: cartData.totalQuantitiy}))} catch (error){       dispatch(
         uiActions.showNotification({
           status: "error",
           title: "Error!",
